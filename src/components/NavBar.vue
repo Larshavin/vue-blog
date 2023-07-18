@@ -1,0 +1,13 @@
+<template>
+    <div>
+        <div>
+            <RouterLink to="/">Home</RouterLink>
+            <RouterLink to="/about">About</RouterLink>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { RouterLink } from 'vue-router'
+
+</script>
