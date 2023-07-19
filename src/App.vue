@@ -2,31 +2,42 @@
 import { ref, onMounted } from 'vue';
 import NavBar from './components/NavBar.vue';
 
+import { storeToRefs } from 'pinia'
+import { useToggleStore } from '@/stores/toggle'
+const toggleStore = useToggleStore()
+const { toggleDarKMode } = storeToRefs(toggleStore)
+
+const title = ref("Geronimo! ~")
 const navbarRef = ref(null);
-const contentHeight = ref(null);
-// const navbarHeight = reactive({ value: 0 });
+// const contentHeight = ref(null);
+// onMounted(() => {
+//   // Get the height of the navbar_div element
+//   if (navbarRef.value) {
+//     contentHeight.value = `calc(100vh - ${navbarRef.value.offsetHeight + 50}px)`
+//   }
+// });
 
-onMounted(() => {
-  // Get the height of the navbar_div element
-  if (navbarRef.value) {
-    contentHeight.value = `calc(100vh - ${navbarRef.value.offsetHeight}px)`
-  }
-});
-
-const toggleDarKMode = ref(true);
 </script>
 
 <template>
-  <div id="main" :class="[toggleDarKMode ? 'surface-900 text-300' : 'bg-blue-50']"
-    style="width: 100%; height: 100vh; min-width: 360px;">
+  <div id="main" class="flex flex-column align-items-center"
+    :class="[toggleDarKMode ? 'surface-900 text-300' : 'bg-blue-50 text-800']"
+    style="width: 100%; min-height: 100vh; min-width: 360px;">
     <div id="navbar_div" class="flex flex-column align-items-center" ref="navbarRef">
-      <NavBar class="navbar my-3" title="Geronimo! ~" :toggle="toggleDarKMode"
+      <NavBar class="navbar my-1" :title="title" :toggle="toggleDarKMode"
         @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
     <div id="content_div" class="flex flex-column align-items-center">
-      <div class="border-1 content" :style="{ height: contentHeight }">
+      <div class="content">
+        <!-- :style="{ height: contentHeight }" -->
         <RouterView />
       </div>
+    </div>
+    <div id="footer_div" class="footer flex align-items-center justify-content-center" style="height: 50px;">
+      © 2023 &nbsp;
+      <a href="_self" :class="[toggleDarKMode ? 'text-300' : 'text-800']">{{ title }}</a>
+      &nbsp; Powered by &nbsp;
+      <a href="https://ko.vuejs.org" :class="[toggleDarKMode ? 'text-300' : 'text-800']">Vue.js</a>
     </div>
   </div>
 </template>
@@ -40,6 +51,10 @@ const toggleDarKMode = ref(true);
   .navbar {
     width: 100%;
   }
+
+  .footer {
+    width: 100%;
+  }
 }
 
 @media (min-width:800px) and (max-width:1072px) {
@@ -48,6 +63,10 @@ const toggleDarKMode = ref(true);
   }
 
   .navbar {
+    width: 800px;
+  }
+
+  .footer {
     width: 800px;
   }
 }
@@ -60,9 +79,13 @@ const toggleDarKMode = ref(true);
   .navbar {
     width: 1072px;
   }
+
+  .footer {
+    width: 800px;
+  }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400&display=swap'); */
 
 @font-face {
   font-family: 'blog';
@@ -119,5 +142,17 @@ const toggleDarKMode = ref(true);
 
 body {
   font-family: 'blog';
+}
+
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scroll {
+  -ms-overflow-style: none;
+  /* 인터넷 익스플로러 */
+  scrollbar-width: none;
+  /* 파이어폭스 */
 }
 </style>
