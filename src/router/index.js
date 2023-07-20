@@ -4,6 +4,8 @@ import SearchView from '@/views/SearchView.vue'
 import ArchiveView from '@/views/ArchiveView.vue'
 import TagView from '@/views/TagView.vue'
 import PostsView from '@/views/PostsView.vue'
+import PostDetailView from '@/views/PostDetailView.vue'
+import TestView from '@/views/TestView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,16 @@ const router = createRouter({
       path: '/posts',
       name: 'posts',
       component: PostsView
+    },
+    {
+      path: '/post/:id',
+      name: 'postDetail',
+      component: PostDetailView
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: TestView
     },
   ]
 })

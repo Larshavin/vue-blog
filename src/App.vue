@@ -9,14 +9,13 @@ const { toggleDarKMode } = storeToRefs(toggleStore)
 
 const title = ref("Geronimo! ~")
 const navbarRef = ref(null);
-// const contentHeight = ref(null);
-// onMounted(() => {
-//   // Get the height of the navbar_div element
-//   if (navbarRef.value) {
-//     contentHeight.value = `calc(100vh - ${navbarRef.value.offsetHeight + 50}px)`
-//   }
-// });
-
+const contentHeight = ref(null);
+onMounted(() => {
+  // Get the height of the navbar_div element
+  if (navbarRef.value) {
+    contentHeight.value = `calc(100vh - ${navbarRef.value.offsetHeight + 50}px)`
+  }
+});
 </script>
 
 <template>
@@ -28,8 +27,7 @@ const navbarRef = ref(null);
         @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
     <div id="content_div" class="flex flex-column align-items-center">
-      <div class="content">
-        <!-- :style="{ height: contentHeight }" -->
+      <div class="content" :style="{ 'min-height': contentHeight }">
         <RouterView />
       </div>
     </div>

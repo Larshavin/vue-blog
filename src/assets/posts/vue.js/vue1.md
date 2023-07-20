@@ -171,7 +171,7 @@ vue.js의 구조를 좀 더 파악해봅시다. import 되고 있는 router, pin
 
  프로젝트 최상단 폴더로 돌아가보면, `index.html` 파일이 존재합니다. 그리고 그곳에서 main.js가 호출 되는 것을 확인 할 수 있습니다.
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -400,7 +400,7 @@ export const useCounterStore = defineStore('counter', () => {
 
  primeFlex를 사용하면 flex, 반응형 등등의 css 요소를 쉽게 사용할 수 있습니다. 우선 백그라운드 전체를 회색으로 바꿔봅시다. App.vue와 index.html을 다음과 같이 만듭니다. 
 
-```html
+```HTML
 <!DOCTYPE html>
 <html lang="kr">
   <head>
