@@ -1,17 +1,38 @@
 <template>
     <div>
+        <div>
+            {{ options }}
+        </div>
+        <div>
+            {{ tocItems }}
+        </div>
         <div v-html="renderedContent"></div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <div v-html="tableOfContents"></div>
     </div>
 </template>
   
 <script setup>
+import { ref, onMounted } from 'vue';
 import { marked } from 'marked';
+import fm from 'front-matter';
+
+const renderedContent = ref();
+onMounted(() => {
+    marked.use({ hooks });
+    marked.use({ renderer });
+
+    // Render the Markdown content
+    renderedContent.value = marked(markdown);
+
+    console.log(tocItems.value);
+});
 
 // The Markdown content with headings
 const markdown = `
+---
+title: Just hack'n
+description: Nothing to see here
+---
+
   # Heading 1
   ## Subheading 1.1
   ## Subheading 1.2
@@ -19,39 +40,41 @@ const markdown = `
   # Heading 2
   ## Subheading 2.1
   \`<template>\` 쪽을 살펴봅시다. 
-`
+`.trim()
 
-// Function to generate the Table of Contents from the Markdown content
-const generateTableOfContents = (markdownContent) => {
-
-    const headings = [];
-    const tocItems = [];
-    const renderer = new marked.Renderer();
-
-    const tokens = marked.lexer(markdownContent);
-    console.log(tokens);
-    marked.walkTokens(tokens, (token) => {
-        if (token.type === 'heading') {
-            tocItems.push({
-                text: token.text,
-                level: token.depth,
-            });
-        }
-    });
-
-    const tableOfContentsHTML = tocItems
-        .map((item) => `<li><a href="#${item.text.toLowerCase().replace(/[^\w]+/g, '-')}">${item.text}</a></li>`)
-        .join('');
-
-    return tableOfContentsHTML;
+const options = ref()
+// Override function
+const hooks = {
+    preprocess(markdown) {
+        const data = fm(markdown);
+        options.value = data.attributes;
+        return data.body;
+    }
 };
 
-// Call the function with the Markdown content
-const tableOfContents = generateTableOfContents(markdown);
+const tocItems = ref([]);
+const renderer = (() => {
+    var renderer = new marked.Renderer();
+    renderer.heading = function (text, level, raw) {
+        var anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-');
+        tocItems.value.push({
+            anchor: anchor,
+            level: level,
+            text: text
+        });
+        return '<h'
+            + level
+            + ' id="'
+            + anchor
+            + '">'
+            + text
+            + '</h'
+            + level
+            + '>'
+    };
+    return renderer;
+})();
 
-// Render the Markdown content
-const renderer = new marked.Renderer();
-const renderedContent = marked(markdown, { renderer });
 </script>
 
 <style>
