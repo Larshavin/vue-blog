@@ -22,11 +22,10 @@ onMounted(() => {
   <div id="main" class="flex flex-column align-items-center"
     :class="[toggleDarKMode ? 'surface-900 text-300' : 'bg-blue-50 text-800']"
     style="width: 100%; min-height: 100vh; min-width: 360px;">
-    <div id="navbar_div" class="flex flex-column align-items-center" ref="navbarRef">
-      <NavBar class="navbar my-1" :title="title" :toggle="toggleDarKMode"
-        @toggle-change="toggleDarKMode = !toggleDarKMode" />
+    <div id="navbar_div" class="flex flex-column align-items-center w-full" ref="navbarRef">
+      <NavBar class="navbar" :title="title" :toggle="toggleDarKMode" @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
-    <div id="content_div" class="flex flex-column align-items-center">
+    <div id="content_div" class="flex flex-column align-items-center" style="width: 100%;">
       <div class="content" :style="{ 'min-height': contentHeight }">
         <RouterView />
       </div>
@@ -41,9 +40,18 @@ onMounted(() => {
 </template>
 
 <style>
-@media (min-width:360px) and (max-width:800px) {
+html {
+  font-size: 16px;
+}
+
+@media (min-width:0px) and (max-width:800px) {
+  html {
+    font-size: 14px;
+  }
+
   .content {
     width: 100%;
+
   }
 
   .navbar {
@@ -61,7 +69,7 @@ onMounted(() => {
   }
 
   .navbar {
-    width: 800px;
+    width: 100%;
   }
 
   .footer {

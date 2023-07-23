@@ -1,21 +1,56 @@
 <template>
-    <div>
-        {{ options }}
+    <div class="mx-3">
+        <div>
+            <div class="mt-8">
+                <RouterLink to="/" style="text-decoration: none; color: inherit;">
+                    Home
+                </RouterLink> »
+                <RouterLink to="/posts" style="text-decoration: none; color: inherit;">
+                    Posts
+                </RouterLink>
+            </div>
+            <h1 v-if="options.title">
+                {{ options.title }}
+            </h1>
+            <div v-if="options.date" class="text-600">
+                {{ timeformatChange(options.date) }} · {{ timeToRead }} min read
+            </div>
+        </div>
+
+        <div
+            class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center">
+            <div class="">
+                <i v-if="!tocOpen" class="pi pi-caret-right" @click="tocClick()"></i>
+                <i v-else class="pi pi-caret-down" @click="tocClick()"></i>
+                Table of Contents
+            </div>
+            <div v-if="tocOpen" class="mt-2">
+                <div v-for="item in tocItems" :key="item.text" class="m-2 px-3">
+                    <div v-html="linkForTitle(item)" class="toc"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
+
+        <div v-if="options.Tags">
+            {{ options.Tags }}
+        </div>
+        <Comment />
     </div>
-    <div>
-        {{ tocItems }}
-    </div>
-    <div class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios';
+import { RouterLink } from 'vue-router'
 import { marked } from 'marked';
 import { markedHighlight } from "marked-highlight";
 import fm from 'front-matter';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
+import Comment from '@/components/Comment.vue';
 
 const markdown = ref('');
 const markdownHtml = ref('');
@@ -43,7 +78,16 @@ onMounted(async () => {
     const path = '../src/assets/posts/vue.js/vue1.md'
     await getMarkdownFile(path);
     markdownHtml.value = await markdownToHtml();
+    readingTime(markdown.value);
 });
+
+const timeToRead = ref(0);
+const readingTime = (text) => {
+    const wordsPerMinute = 200;
+    const noOfWords = text.split(/\s/g).length;
+    const minutes = noOfWords / wordsPerMinute;
+    timeToRead.value = Math.ceil(minutes);
+};
 
 const getMarkdownFile = async (path) => {
     try {
@@ -56,9 +100,9 @@ const getMarkdownFile = async (path) => {
 
 const tocItems = ref([]);
 const renderer = (() => {
-    var renderer = new marked.Renderer();
+    const renderer = new marked.Renderer();
     renderer.heading = function (text, level, raw) {
-        var anchor = this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-');
+        const anchor = raw.replace(/[^\wㄱ-ㅎㅏ-ㅣ가-힣]+/g, '-');
         tocItems.value.push({
             anchor: anchor,
             level: level,
@@ -70,13 +114,18 @@ const renderer = (() => {
             + anchor
             + '">'
             + text
+            + '<a hidden class="anchor" aria-hidden="true" href="#' + anchor + '">#</a>'
             + '</h'
             + level
             + '>'
     };
     return renderer;
 })();
-const options = ref()
+const options = ref({
+    title: '',
+    date: '',
+    Tags: [],
+})
 const hooks = {
     preprocess(markdown) {
         const data = fm(markdown);
@@ -84,23 +133,77 @@ const hooks = {
         return data.body;
     }
 };
+
+const linkForTitle = (item) => {
+    // console.log(item)
+    if (item.level == 1) {
+        return `<li class="list-none"><a href="#${item.anchor}" class="toc">${item.text}</a></li>`
+    }
+    else if (item.level == 2) {
+        return `<li style="margin-left: 1rem;" class="list-none"><a href="#${item.anchor}" class="toc">${item.text}</a></li>`
+    }
+
+}
+
+const timeformatChange = (time) => {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${year}년 ${month}월 ${day}일`;
+}
+
+
+const tocOpen = ref(false);
+const tocClick = () => {
+    tocOpen.value = !tocOpen.value;
+}
 </script>
 
 
 
 <style scoped>
-.custom ::v-deep a {
+.custom {
+    /* Other styles */
+    word-wrap: break-word;
+    max-width: 100%;
+    /* Set the desired maximum width for the content */
+}
+
+.custom :deep(a:not(.anchor)) {
     color: #42b983;
     text-decoration: none;
     border-bottom: 1px solid #42b983;
     transition: all 0.3s ease-in-out;
 }
 
-.custom ::v-deep code:not([class]) {
+.custom :deep(code:not([class])) {
     padding: 2px 4px;
     font-size: 90%;
     color: #c7254e;
     background-color: #f9f2f4;
     border-radius: 4px;
+}
+
+.toc :deep(a) {
+    color: inherit;
+    text-decoration: none;
+}
+
+.toc:hover :deep(a) {
+    color: #42b983;
+    text-decoration: underline;
+}
+
+:deep(h1:hover .anchor) {
+    display: inline-flex;
+    color: var(--surface-700);
+    margin-inline-start: 8px;
+    font-weight: 100;
+    user-select: none;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+
 }
 </style >

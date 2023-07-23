@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex justify-content-between align-items-center">
+        <div class="flex justify-content-between align-items-center px-3">
             <div class="flex align-items-center">
                 <div class="text-2xl ml-2 font-bold">
                     <RouterLink to="/" class="router">
