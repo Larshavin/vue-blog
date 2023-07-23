@@ -13,7 +13,7 @@
                 {{ options.title }}
             </h1>
             <div v-if="options.date" class="text-600">
-                {{ timeformatChange(options.date) }} · {{ timeToRead }} min read
+                {{ timeFormatChange(options.date) }} · {{ timeToRead }} min read
             </div>
         </div>
 
@@ -22,7 +22,7 @@
             <div class="">
                 <i v-if="!tocOpen" class="pi pi-caret-right" @click="tocClick()"></i>
                 <i v-else class="pi pi-caret-down" @click="tocClick()"></i>
-                Table of Contents
+                &nbsp; Table of Contents
             </div>
             <div v-if="tocOpen" class="mt-2">
                 <div v-for="item in tocItems" :key="item.text" class="m-2 px-3">
@@ -32,7 +32,7 @@
 
         </div>
 
-        <div class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
+        <div id="markdown" class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
 
         <div v-if="options.Tags">
             {{ options.Tags }}
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios';
 import { RouterLink } from 'vue-router'
 import { marked } from 'marked';
@@ -57,13 +57,13 @@ const markdownHtml = ref('');
 const markdownToHtml = (() => {
     marked.use({ hooks });
     marked.use({ renderer });
-    marked.use(markedHighlight({
-        langPrefix: 'hljs language-',
-        highlight(code, lang) {
-            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-            return hljs.highlight(code, { language }).value;
-        }
-    }));
+    // marked.use(markedHighlight({
+    //     langPrefix: 'hljs language-',
+    //     highlight(code, lang) {
+    //         const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    //         return hljs.highlight(code, { language }).value;
+    //     }
+    // }));
     const output = marked(markdown.value, {
         async: true,
         pedantic: false,
@@ -79,6 +79,31 @@ onMounted(async () => {
     await getMarkdownFile(path);
     markdownHtml.value = await markdownToHtml();
     readingTime(markdown.value);
+
+    nextTick(() => {
+        const preElements = document.querySelectorAll('#markdown pre');
+        preElements.forEach((preElement) => {
+            const button = document.createElement('Button');
+            button.classList.add('button', 'absolute', 'text-white', 'p-1', 'border-round');
+            button.style.right = '0.25rem';
+            button.style.top = '0.4rem';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const lines = preElement.textContent.trim();
+                const code = lines.split('\n')
+                code.shift()
+                const clipboard = code.join('\n').trim();
+                window.navigator.clipboard.writeText(clipboard).then(() => {
+                    button.textContent = "Copied !"
+                    setTimeout(() => {
+                        button.textContent = "Copy"
+                    }, 5000);
+                });
+            });
+            preElement.appendChild(button);
+            preElement.classList.add('relative');
+        })
+    });
 });
 
 const timeToRead = ref(0);
@@ -101,7 +126,18 @@ const getMarkdownFile = async (path) => {
 const tocItems = ref([]);
 const renderer = (() => {
     const renderer = new marked.Renderer();
+    renderer.code = function (code, language) {
+        const codeContent = hljs.highlight(code, { language }).value;
+        const langClass = 'language-' + language;
+
+        const template = `
+        <pre class="flex flex-column">
+            <div class="surface-700 text-white px-2">${language}</div>
+            <code class="hljs ${langClass} ">${codeContent}</code></pre>`;
+        return template;
+    };
     renderer.heading = function (text, level, raw) {
+        // console.log(text, level, raw)
         const anchor = raw.replace(/[^\wㄱ-ㅎㅏ-ㅣ가-힣]+/g, '-');
         tocItems.value.push({
             anchor: anchor,
@@ -145,7 +181,7 @@ const linkForTitle = (item) => {
 
 }
 
-const timeformatChange = (time) => {
+const timeFormatChange = (time) => {
     const date = new Date(time);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -159,6 +195,7 @@ const tocOpen = ref(false);
 const tocClick = () => {
     tocOpen.value = !tocOpen.value;
 }
+
 </script>
 
 
@@ -176,6 +213,10 @@ const tocClick = () => {
     text-decoration: none;
     border-bottom: 1px solid #42b983;
     transition: all 0.3s ease-in-out;
+}
+
+.custom :deep(p, h1, h2, h3, h4, h5, h6) {
+    user-select: none;
 }
 
 .custom :deep(code:not([class])) {
@@ -204,6 +245,35 @@ const tocClick = () => {
     user-select: none;
     text-decoration: underline;
     text-decoration-thickness: 1px;
+}
 
+:deep(.codeTop) {
+    margin: 0;
+    background-color: #2c1f23;
+}
+
+:deep(.circle) {
+    div {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin: 0px 5px;
+    }
+}
+
+:deep(.button) {
+    color: #adb5bd;
+    box-sizing: border-box;
+    transition: 0.2s ease-out;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0);
+    padding: 5px 10px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 0.15rem;
 }
 </style >
