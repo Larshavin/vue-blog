@@ -34,8 +34,21 @@
 
         <div id="markdown" class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
 
-        <div v-if="options.Tags">
-            {{ options.Tags }}
+        <div v-if="options.Tags" class="flex gap-3">
+            <div v-for="tag in options.Tags" :key="tag"
+                class="flex align-items-center border-round justify-content-center surface-600 text-300 align-items-center"
+                style="height: 40px; width: 60px;">
+                {{ tag }}
+            </div>
+        </div>
+        <div class=" flex w-full justify-content-between border-round surface-600 text-300 align-items-center mt-3"
+            style="height: 50px;">
+            <div class="p-4">
+                이전 글
+            </div>
+            <div class="p-4">
+                다음 글
+            </div>
         </div>
         <Comment />
     </div>
@@ -46,7 +59,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios';
 import { RouterLink } from 'vue-router'
 import { marked } from 'marked';
-import { markedHighlight } from "marked-highlight";
+// import { markedHighlight } from "marked-highlight";
 import fm from 'front-matter';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
@@ -79,7 +92,6 @@ onMounted(async () => {
     await getMarkdownFile(path);
     markdownHtml.value = await markdownToHtml();
     readingTime(markdown.value);
-
     nextTick(() => {
         const preElements = document.querySelectorAll('#markdown pre');
         preElements.forEach((preElement) => {
@@ -132,8 +144,8 @@ const renderer = (() => {
 
         const template = `
         <pre class="flex flex-column">
-            <div class="surface-700 text-white px-2">${language}</div>
-            <code class="hljs ${langClass} ">${codeContent}</code></pre>`;
+            <div class="surface-700 text-white px-2 border-round">${language}</div>
+            <code class="hljs ${langClass} border-round">${codeContent}</code></pre>`;
         return template;
     };
     renderer.heading = function (text, level, raw) {

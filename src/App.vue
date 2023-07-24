@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import NavBar from './components/NavBar.vue';
 
 import { storeToRefs } from 'pinia'
@@ -15,7 +15,30 @@ onMounted(() => {
   if (navbarRef.value) {
     contentHeight.value = `calc(100vh - ${navbarRef.value.offsetHeight + 50}px)`
   }
+  // Get scroll position
+  window.addEventListener('scroll', handleScroll);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+const showTopButton = ref(false);
+
+const scrollToTop = () => {
+  window.scrollTo(0, 0);
+};
+
+// Function to update the scroll direction based on the current scroll position
+const handleScroll = () => {
+  // console.log(window.scrollY, showTopButton.value)
+  if (window.scrollY > 0) {
+    showTopButton.value = true;
+  } else {
+    showTopButton.value = false;
+  }
+};
+
 </script>
 
 <template>
@@ -36,10 +59,24 @@ onMounted(() => {
       &nbsp; Powered by &nbsp;
       <a href="https://ko.vuejs.org" :class="[toggleDarKMode ? 'text-300' : 'text-800']">Vue.js</a>
     </div>
+    <div v-if="showTopButton" class="scroll-btn flex align-items-center justify-content-center" @click="scrollToTop">TOP
+    </div>
   </div>
 </template>
 
 <style>
+.scroll-btn {
+  cursor: pointer;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--surface-700);
+  color: aliceblue;
+}
+
 html {
   font-size: 16px;
 }
