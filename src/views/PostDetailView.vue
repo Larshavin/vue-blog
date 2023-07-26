@@ -244,6 +244,7 @@ const tocClick = () => {
 
 .custom :deep(p, h1, h2, h3, h4, h5, h6) {
     user-select: none;
+    -webkit-user-select: none;
 }
 
 .custom :deep(code:not([class])) {
