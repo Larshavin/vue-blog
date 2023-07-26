@@ -57,13 +57,15 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios';
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { marked } from 'marked';
 // import { markedHighlight } from "marked-highlight";
 import fm from 'front-matter';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
 import Comment from '@/components/Comment.vue';
+
+const route = useRoute()
 
 const markdown = ref('');
 const markdownHtml = ref('');
@@ -88,13 +90,15 @@ const markdownToHtml = (() => {
 });
 
 onMounted(async () => {
-    const path = '../src/assets/posts/vue.js/vue1.md'
-    await getMarkdownFile(path);
+    const server = 'http://192.168.15.246:8080/markdown'
+    const path = "/" + route.params.id + "/" + route.params.id + ".md"
+    await getMarkdownFile(server + path);
     markdownHtml.value = await markdownToHtml();
     readingTime(markdown.value);
     nextTick(() => {
         const preElements = document.querySelectorAll('#markdown pre');
         preElements.forEach((preElement) => {
+            // console.log(preElement)
             const button = document.createElement('Button');
             button.classList.add('button', 'absolute', 'text-white', 'p-1', 'border-round');
             button.style.right = '0.25rem';
@@ -102,15 +106,21 @@ onMounted(async () => {
             button.textContent = 'Copy';
             button.addEventListener('click', () => {
                 const lines = preElement.textContent.trim();
+                // console.log(lines)
                 const code = lines.split('\n')
                 code.shift()
+                // console.log(code)
                 const clipboard = code.join('\n').trim();
+                // console.log(clipboard)
                 window.navigator.clipboard.writeText(clipboard).then(() => {
+                    console.log('Copied to clipboard');
                     button.textContent = "Copied !"
                     setTimeout(() => {
                         button.textContent = "Copy"
                     }, 5000);
-                });
+                }).catch((error) => {
+                    console.error(error);
+                })
             });
             preElement.appendChild(button);
             preElement.classList.add('relative');
@@ -139,14 +149,19 @@ const tocItems = ref([]);
 const renderer = (() => {
     const renderer = new marked.Renderer();
     renderer.code = function (code, language) {
-        const codeContent = hljs.highlight(code, { language }).value;
+
+        const codeContent = language ? hljs.highlight(code, { language }).value : hljs.highlightAuto(code).value;
         const langClass = 'language-' + language;
 
         const template = `
         <pre class="flex flex-column">
             <div class="surface-700 text-white px-2 border-round">${language}</div>
-            <code class="hljs ${langClass} border-round">${codeContent}</code></pre>`;
+            <code class="hljs ${langClass} border-round" style="font-size:60%;">${codeContent}</code></pre>`;
         return template;
+    };
+    renderer.image = function (href, title, text) {
+        const path = 'http://192.168.15.246:8080/image/' + href
+        return `<div class="flex justify-content-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 border-round z-2 border-300" /></div>`; // for local references
     };
     renderer.heading = function (text, level, raw) {
         // console.log(text, level, raw)
@@ -287,5 +302,11 @@ const tocClick = () => {
     top: 0;
     right: 0;
     border-radius: 0 0.15rem;
+}
+
+:deep(.img) {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 </style >

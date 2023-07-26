@@ -38,6 +38,7 @@ const router = createRouter({
     {
       path: '/post/:id',
       name: 'postDetail',
+      // props: true,
       component: PostDetailView
     },
     {
