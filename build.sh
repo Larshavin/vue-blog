@@ -12,7 +12,7 @@ cd dist
 git restore CNAME 
 
 # Copy 404.html as same index.html
-cp dist/index.html dist/404.html
+cp index.html 404.html
 
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
