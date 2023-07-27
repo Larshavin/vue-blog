@@ -32,7 +32,7 @@ const timeFormatChange = (time) => {
 const id = ref(1)
 const getPosts = async () => {
     try {
-        const response = await axios.get('http://192.168.15.246:8080/posts/' + id.value);
+        const response = await axios.get('https://www.3trolls.me:40443/posts/' + id.value);
         posts.value = response.data;
     } catch (error) {
         console.error(error);

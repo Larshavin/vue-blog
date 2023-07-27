@@ -90,7 +90,7 @@ const markdownToHtml = (() => {
 });
 
 onMounted(async () => {
-    const server = 'http://192.168.15.246:8080/markdown'
+    const server = 'https://www.3trolls.me:40443/markdown'
     const path = "/" + route.params.id + "/" + route.params.id + ".md"
     await getMarkdownFile(server + path);
     markdownHtml.value = await markdownToHtml();
@@ -160,7 +160,7 @@ const renderer = (() => {
         return template;
     };
     renderer.image = function (href, title, text) {
-        const path = 'http://192.168.15.246:8080/image/' + href
+        const path = 'https://www.3trolls.me:40443/image/' + href
         return `<div class="flex justify-content-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 border-round z-2 border-300" /></div>`; // for local references
     };
     renderer.heading = function (text, level, raw) {
