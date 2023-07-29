@@ -13,6 +13,7 @@ import "primeicons/primeicons.css";
 
 
 import Button from 'primevue/button';
+import Paginator from 'primevue/paginator';
 
 const app = createApp(App)
 
@@ -21,5 +22,6 @@ app.use(createPinia())
 app.use(router)
 
 app.component('Button', Button);
+app.component('Paginator', Paginator);
 
 app.mount('#app')
