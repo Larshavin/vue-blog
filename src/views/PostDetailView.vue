@@ -18,11 +18,12 @@
         </div>
 
         <div
-            class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center">
+            class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center cursor-pointer"
+            @click="tocClick()">
             <div class="">
-                <i v-if="!tocOpen" class="pi pi-caret-right" @click="tocClick()"></i>
-                <i v-else class="pi pi-caret-down" @click="tocClick()"></i>
-                &nbsp; Table of Contents
+                <i v-if="!tocOpen" class="pi pi-caret-right"></i>
+                <i v-else class="pi pi-caret-down"></i>
+                <span class="ml-2">Table of Contents</span>
             </div>
             <div v-if="tocOpen" class="mt-2">
                 <div v-for="item in tocItems" :key="item.text" class="m-2 px-3">
