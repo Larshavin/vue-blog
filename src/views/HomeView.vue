@@ -13,7 +13,7 @@ const introduce = ref("In the realm of astronomy once, \n but now becoming a dre
       <Profile :title="title" :introduce="introduce" />
     </div>
     <div class="overflow-y-auto no-scroll mt-3">
-      <Posts />
+      <Posts :number="1" />
     </div>
   </div>
 </template>

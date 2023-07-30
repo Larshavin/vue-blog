@@ -13,6 +13,13 @@ const darkMode = computed(() => {
     return toggleDarKMode.value ? 'surface-800 text-0' : 'surface-card text-900'
 })
 
+const props = defineProps({
+    number: {
+        type: Number,
+        required: true
+    }
+})
+
 const posts = ref()
 onMounted(async () => {
     await getPosts();
@@ -29,8 +36,9 @@ const timeFormatChange = (time) => {
     return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`;
 }
 
-const id = ref(1)
+const id = ref(props.number)
 const rows = ref(5)
+const first = ref((id.value - 1) * rows.value)
 const postLength = ref(0)
 const getPosts = async () => {
     try {
@@ -47,7 +55,7 @@ const seePostDetail = (path) => {
 }
 
 const PaginatorDisable = (() => {
-    return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-hover m-1 text-color-secondary hover:text-color'
+    return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color'
 })()
 
 const PaginatorActive = (() => {
@@ -56,9 +64,9 @@ const PaginatorActive = (() => {
 
 const PaginatorHidden = ((context) => {
     if (context.disabled) {
-        return 'text-xl border-circle border-none w-2rem h-2rem surface-hover m-1 text-color-secondary'
+        return 'text-xl border-circle border-none w-2rem h-2rem surface-ground m-1 text-color-secondary'
     } else {
-        return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-hover m-1 text-color-secondary hover:text-color'
+        return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color'
     }
 })
 
@@ -88,7 +96,7 @@ const changePage = (event) => {
         </div>
     </div>
     <div class="flex justify-content-center my-3">
-        <Paginator :rows="rows" :totalRecords="postLength" :pt="{
+        <Paginator v-model:first="first" :rows="rows" :totalRecords="postLength" :pt="{
             root: () => ({
                 class: 'flex justify-content-center align-items-center border-round-lg bg-white border-none h-3rem'
             }),

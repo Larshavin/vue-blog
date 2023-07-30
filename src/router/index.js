@@ -31,14 +31,13 @@ const router = createRouter({
       component: TagView
     },
     {
-      path: '/posts',
+      path: '/posts/:number',
       name: 'posts',
       component: PostsView
     },
     {
       path: '/post/:id',
       name: 'postDetail',
-      // props: true,
       component: PostDetailView
     },
     {

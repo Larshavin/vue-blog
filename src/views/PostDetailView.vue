@@ -5,7 +5,7 @@
                 <RouterLink to="/" style="text-decoration: none; color: inherit;">
                     Home
                 </RouterLink> »
-                <RouterLink to="/posts" style="text-decoration: none; color: inherit;">
+                <RouterLink :to="'/posts/' + currentPostID" style="text-decoration: none; color: inherit;">
                     Posts
                 </RouterLink>
             </div>
@@ -36,18 +36,36 @@
 
         <div v-if="options.Tags" class="flex gap-3">
             <div v-for="tag in options.Tags" :key="tag"
-                class="flex align-items-center border-round justify-content-center surface-600 text-300 align-items-center"
-                style="height: 40px; width: 60px;">
+                class="flex align-items-center border-round justify-content-center surface-600 text-300 align-items-center px-1"
+                style="height: 40px; min-width: 60px;">
                 {{ tag }}
             </div>
         </div>
         <div class=" flex w-full justify-content-between border-round surface-600 text-300 align-items-center mt-3"
             style="height: 50px;">
-            <div class="p-4">
-                이전 글
+            <div class="p-4 w-full">
+                <div class="justify-content-start flex mb-1">
+                    다음 글 :
+                </div>
+                <div v-if="prevPost.title" @click="seePostDetail(prevPost.title)"
+                    class="w-full justify-content-start flex cursor-pointer underline">
+                    {{ prevPost.title }}
+                </div>
+                <div v-else class="w-full justify-content-start flex ">
+                    없음
+                </div>
             </div>
-            <div class="p-4">
-                다음 글
+            <div class="p-4  w-full">
+                <div class="justify-content-end flex mb-1">
+                    이전 글 :
+                </div>
+                <div v-if="nextPost.title" @click="seePostDetail(nextPost.title)"
+                    class="w-full justify-content-end flex cursor-pointer underline">
+                    {{ nextPost.title }}
+                </div>
+                <div v-else class="w-full justify-content-end flex">
+                    없음
+                </div>
             </div>
         </div>
         <Comment />
@@ -57,7 +75,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import axios from 'axios';
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { marked } from 'marked';
 // import { markedHighlight } from "marked-highlight";
 import fm from 'front-matter';
@@ -66,19 +84,13 @@ import 'highlight.js/styles/github-dark.css';
 import Comment from '@/components/Comment.vue';
 
 const route = useRoute()
+const router = useRouter()
 
 const markdown = ref('');
 const markdownHtml = ref('');
 const markdownToHtml = (() => {
     marked.use({ hooks });
     marked.use({ renderer });
-    // marked.use(markedHighlight({
-    //     langPrefix: 'hljs language-',
-    //     highlight(code, lang) {
-    //         const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-    //         return hljs.highlight(code, { language }).value;
-    //     }
-    // }));
     const output = marked(markdown.value, {
         async: true,
         pedantic: false,
@@ -90,8 +102,13 @@ const markdownToHtml = (() => {
 });
 
 onMounted(async () => {
+    await importData();
+});
+
+const importData = async () => {
     const server = 'https://www.3trolls.me:40443/markdown'
     const path = "/" + route.params.id + "/" + route.params.id + ".md"
+    await getPageInfo(route.params.id);
     await getMarkdownFile(server + path);
     markdownHtml.value = await markdownToHtml();
     readingTime(markdown.value);
@@ -126,7 +143,8 @@ onMounted(async () => {
             preElement.classList.add('relative');
         })
     });
-});
+}
+
 
 const timeToRead = ref(0);
 const readingTime = (text) => {
@@ -144,6 +162,31 @@ const getMarkdownFile = async (path) => {
         console.error(error);
     }
 };
+
+
+const prevPost = ref({ "title": "", "number": "" });
+const nextPost = ref({ "title": "", "number": "" });
+const currentPostID = ref();
+const getPageInfo = async (title) => {
+    const server = 'https://www.3trolls.me:40443/post'
+    const rows = 5;
+    try {
+        const response = await axios.get(server + '/' + title + '/' + rows);
+        prevPost.value = response.data.prev;
+        nextPost.value = response.data.next;
+        currentPostID.value = response.data.number + 1;
+
+        // console.log(prevPost.value, nextPost.value, currentPostID.value)
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const seePostDetail = async (path) => {
+    await router.push({ name: 'postDetail', params: { id: path } })
+    router.go(0)
+    window.scrollTo(0, 0);
+}
 
 const tocItems = ref([]);
 const renderer = (() => {
@@ -205,7 +248,6 @@ const linkForTitle = (item) => {
     else if (item.level == 2) {
         return `<li style="margin-left: 1rem;" class="list-none"><a href="#${item.anchor}" class="toc">${item.text}</a></li>`
     }
-
 }
 
 const timeFormatChange = (time) => {

@@ -1,5 +1,8 @@
 <script setup>
 import Posts from '@/components/PostsComponent.vue';
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 </script>
 
 <template>
@@ -13,7 +16,7 @@ import Posts from '@/components/PostsComponent.vue';
             Posts
         </h1>
         <div class="overflow-y-auto no-scroll mt-3">
-            <Posts />
+            <Posts :number="Number(route.params.number)" />
         </div>
     </div>
 </template>
