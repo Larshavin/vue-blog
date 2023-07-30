@@ -66,7 +66,7 @@ const PaginatorHidden = ((context) => {
     if (context.disabled) {
         return 'text-xl border-circle border-none w-2rem h-2rem surface-ground m-1 text-color-secondary'
     } else {
-        return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color'
+        return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color cursor-pointer'
     }
 })
 
@@ -78,7 +78,7 @@ const changePage = (event) => {
 </script>
 
 <template>
-    <div v-for="post in posts" :key="post.content" class="border-round-lg mx-5 my-5 p-4 shadow-2 flex flex-column gap-2"
+    <div v-for="post in posts" :key="post.content" class="border-round-lg mx-5 my-5 p-4 shadow-2 flex flex-column gap-2 cursor-pointer"
         :class="darkMode" style="height: 120px;" @click="seePostDetail(post.path)">
         <div class="font-bold text-title overflow-hidden white-space-nowrap text-overflow-ellipsis" style="height: 30%;">
             {{ post.matter.Title }}
