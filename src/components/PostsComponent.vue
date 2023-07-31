@@ -42,7 +42,7 @@ const first = ref((id.value - 1) * rows.value)
 const postLength = ref(0)
 const getPosts = async () => {
     try {
-        const response = await axios.get('https://www.3trolls.me:40443/posts/' + id.value + '/' + rows.value);
+        const response = await axios.get('https://blog.3trolls.me/syyang/posts/' + id.value + '/' + rows.value);
         posts.value = response.data.posts;
         postLength.value = response.data.length;
     } catch (error) {
@@ -78,8 +78,9 @@ const changePage = (event) => {
 </script>
 
 <template>
-    <div v-for="post in posts" :key="post.content" class="border-round-lg mx-5 my-5 p-4 shadow-2 flex flex-column gap-2 cursor-pointer"
-        :class="darkMode" style="height: 120px;" @click="seePostDetail(post.path)">
+    <div v-for="post in posts" :key="post.content"
+        class="border-round-lg mx-5 my-5 p-4 shadow-2 flex flex-column gap-2 cursor-pointer" :class="darkMode"
+        style="height: 120px;" @click="seePostDetail(post.path)">
         <div class="font-bold text-title overflow-hidden white-space-nowrap text-overflow-ellipsis" style="height: 30%;">
             {{ post.matter.Title }}
         </div>

@@ -17,8 +17,7 @@
             </div>
         </div>
 
-        <div
-            class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center cursor-pointer"
+        <div class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center cursor-pointer"
             @click="tocClick()">
             <div class="">
                 <i v-if="!tocOpen" class="pi pi-caret-right"></i>
@@ -107,7 +106,7 @@ onMounted(async () => {
 });
 
 const importData = async () => {
-    const server = 'https://www.3trolls.me:40443/markdown'
+    const server = 'https://blog.3trolls.me/syyang/markdown'
     const path = "/" + route.params.id + "/" + route.params.id + ".md"
     await getPageInfo(route.params.id);
     await getMarkdownFile(server + path);
@@ -169,7 +168,7 @@ const prevPost = ref({ "title": "", "number": "" });
 const nextPost = ref({ "title": "", "number": "" });
 const currentPostID = ref();
 const getPageInfo = async (title) => {
-    const server = 'https://www.3trolls.me:40443/post'
+    const server = 'https://blog.3trolls.me/syyang/post'
     const rows = 5;
     try {
         const response = await axios.get(server + '/' + title + '/' + rows);
@@ -204,7 +203,7 @@ const renderer = (() => {
         return template;
     };
     renderer.image = function (href, title, text) {
-        const path = 'https://www.3trolls.me:40443/image/' + href
+        const path = 'https://blog.3trolls.me/syyang/image/' + href
         return `<div class="flex justify-content-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 border-round z-2 border-300" /></div>`; // for local references
     };
     renderer.heading = function (text, level, raw) {
