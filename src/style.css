@@ -40,4 +40,11 @@
         display: list-item;
         text-align: -webkit-match-parent;
       }
+
+      blockquote {
+        @apply border-l-4 border-gray-300 my-4 pl-4;
+        p {
+            @apply text-lg italic;
+        }
+      }
 }

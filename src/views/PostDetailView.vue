@@ -17,6 +17,9 @@
             </div>
         </div>
 
+        <!-- 구분선 -->
+        <div class="w-full h-1 bg-slate-200 mt-7 mb-7"></div>
+
         <div class="commonStyle font-lg p-3 mt-3 mb-7 font-bold rounded flex flex-col items-start justify-center cursor-pointer"
             @click="tocClick()">
             <div class="">
@@ -29,10 +32,15 @@
                     <div v-html="linkForTitle(item)" class="toc"></div>
                 </div>
             </div>
-
         </div>
 
+        <!-- 구분선 -->
+        <div class="w-full h-1 bg-slate-200 mt-7 mb-7"></div>
+
         <div id="markdown" class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
+
+        <!-- 구분선 -->
+        <div class="w-full h-1 bg-slate-200 mt-7 mb-7"></div>
 
         <div v-if="options.Tags" class="flex gap-3">
             <div v-for="tag in options.Tags" :key="tag"
@@ -41,7 +49,7 @@
                 {{ tag }}
             </div>
         </div>
-        <div class=" flex w-full justify-between rounded commonStyle items-center mt-3" style="height: 50px;">
+        <div class=" flex w-full justify-between rounded commonStyle items-center mt-3 h-[70px]">
             <div class="p-4 w-full">
                 <div class="justify-start flex mb-1">
                     다음 글 :
@@ -72,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch, reactive } from 'vue'
 import axios from 'axios';
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { marked } from 'marked';
@@ -144,6 +152,18 @@ const importData = async () => {
     });
 }
 
+// 라우트 매개변수가 변경될 때 실행할 작업
+
+watch(() => route.params.id, async (newId, oldId) => {
+    if (newId !== oldId) {
+        try {
+            await importData();
+        } catch (error) {
+            console.error('Error updating content:', error);
+        }
+    }
+}, { immediate: true });
+
 
 const timeToRead = ref(0);
 const readingTime = (text) => {
@@ -183,7 +203,7 @@ const getPageInfo = async (title) => {
 
 const seePostDetail = async (path) => {
     await router.push({ name: 'postDetail', params: { id: path } })
-    router.go(0)
+    // router.go(0)
     window.scrollTo(0, 0);
 }
 
@@ -226,7 +246,7 @@ const renderer = (() => {
     };
     return renderer;
 })();
-const options = ref({
+const options = reactive({
     title: '',
     date: '',
     Tags: [],
@@ -234,7 +254,8 @@ const options = ref({
 const hooks = {
     preprocess(markdown) {
         const data = fm(markdown);
-        options.value = data.attributes;
+        // options.value = data.attributes;
+        Object.assign(options, data.attributes);
         return data.body;
     }
 };
