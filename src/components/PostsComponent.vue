@@ -10,7 +10,11 @@ const { toggleDarKMode } = storeToRefs(toggleStore)
 const router = useRouter()
 
 const darkMode = computed(() => {
-    return toggleDarKMode.value ? 'surface-800 text-0' : 'surface-card text-900'
+    return toggleDarKMode.value ? 'bg-slate-800 text-white' : 'bg-white text-slate-900'
+})
+
+const darkModeButton = computed(() => {
+    return toggleDarKMode.value ? 'bg-white text-slate-900' : 'bg-slate-800 text-white'
 })
 
 const props = defineProps({
@@ -55,18 +59,20 @@ const seePostDetail = (path) => {
 }
 
 const PaginatorDisable = (() => {
-    return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color'
+    // var color = toggleDarKMode.value ? 'bg-slate-800 text-white' : 'bg-white text-slate-900'
+    return 'text-xl border-circle border-none w-2rem h-2rem hover:surface-ground m-1 hover:text-color'
 })()
 
 const PaginatorActive = (() => {
-    return 'text-xl bg-primary border-circle border-none m-1 w-2rem h-2rem'
+    // var color = toggleDarKMode.value ? 'bg-white text-slate-900' : 'bg-slate-800 text-white'
+    return ' text-xl border-circle border-none m-1 w-2rem h-2rem'
 })()
 
 const PaginatorHidden = ((context) => {
     if (context.disabled) {
-        return 'text-xl border-circle border-none w-2rem h-2rem surface-ground m-1 text-color-secondary'
+        return 'text-xl border-circle border-none w-2rem h-2rem m-1'
     } else {
-        return 'text-xl border-circle bg-white border-none w-2rem h-2rem hover:surface-ground m-1 text-color-secondary hover:text-color cursor-pointer'
+        return 'text-xl border-circle border-none w-2rem h-2rem hover:surface-ground m-1 hover:text-color cursor-pointer'
     }
 })
 
@@ -79,12 +85,13 @@ const changePage = (event) => {
 
 <template>
     <div v-for="post in posts" :key="post.content"
-        class="border-round-lg mx-5 my-5 p-4 shadow-2 flex flex-column gap-2 cursor-pointer" :class="darkMode"
-        style="height: 120px;" @click="seePostDetail(post.path)">
-        <div class="font-bold text-title overflow-hidden white-space-nowrap text-overflow-ellipsis" style="height: 30%;">
+        class="rounded-lg mx-5 my-8 p-5 shadow-xl flex flex-col gap-2 cursor-pointer" :class="darkMode"
+        style="height: 168px;" @click="seePostDetail(post.path)">
+        <div class="font-bold text-title overflow-hidden white-space-nowrap text-overflow-ellipsis"
+            style="height: 30%;">
             {{ post.matter.Title }}
         </div>
-        <div class="text-500 line-height-3 line w-full" style="height: 50%;">
+        <div class="text-slate-500 line-height-3 line w-full" style="height: 50%;">
             <div v-if="post.matter.Content == ''">
                 {{ post.matter.Title }}
             </div>
@@ -92,17 +99,18 @@ const changePage = (event) => {
                 {{ post.matter.Content }}
             </div>
         </div>
-        <div class=" text-500 text-xs flex align-items-center" style="height: 20%;">
+        <div class=" text-slate-500 font-xs flex items-center" style="height: 20%;">
             {{ timeFormatChange(post.matter.Date) }}
         </div>
     </div>
-    <div class="flex justify-content-center my-3">
-        <Paginator v-model:first="first" :rows="rows" :totalRecords="postLength" :pt="{
+    <div class="flex justify-center my-3">
+        <Paginator :class="darkMode" v-model:first="first" :rows="rows" :totalRecords="postLength" :pt="{
             root: () => ({
-                class: 'flex justify-content-center align-items-center border-round-lg bg-white border-none h-3rem'
+                class: 'flex justify-center items-center rounded-lg border-none h-3rem',
             }),
             pageButton: ({ context }) => ({
-                class: (context.active ? PaginatorActive : PaginatorDisable)
+                // class: (context.active ? PaginatorActive : )
+                class: (context.active ? darkModeButton + PaginatorActive : PaginatorDisable)
             }),
             firstPageButton: ({ context }) => ({
                 class: PaginatorHidden(context)

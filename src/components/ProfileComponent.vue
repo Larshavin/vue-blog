@@ -1,16 +1,24 @@
 <template>
     <div class="profile">
-        <h1 class="mb-3">
-            {{ props.title }}
-        </h1>
-        <div v-html="introduce" class="text-500" style="line-height:170%;"></div>
-        <div class=" flex mt-4 gap-3">
-            <a href="https://github.com/Larshavin" target="_blank" style="color: inherit; ">
-                <i class="pi pi-github" style="font-size: 1.6rem"></i>
-            </a>
-            <a href="https://www.instagram.com/larshavin/" target="_blank" style="color: inherit; ">
-                <i class="pi pi-instagram" style="font-size: 1.6rem"></i>
-            </a>
+        <div class="flex">
+            <div class="w-[150px] h-[150px] rounded-full bg-blue-50 mr-8">
+                <img src="https://avatars.githubusercontent.com/u/89558536?v=4" alt="profile"
+                    class="w-full h-full rounded-full">
+            </div>
+            <div>
+                <div class="mb-3 font-bold text-3xl">
+                    {{ props.title }}
+                </div>
+                <div v-html="introduce" class="font-medium" style="line-height:170%;"></div>
+                <div class=" flex mt-4 gap-3">
+                    <a href="https://github.com/Larshavin" target="_blank" style="color: inherit; ">
+                        <i class="pi pi-github" style="font-size: 1.6rem"></i>
+                    </a>
+                    <a href="https://www.instagram.com/larshavin/" target="_blank" style="color: inherit; ">
+                        <i class="pi pi-instagram" style="font-size: 1.6rem"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </template>

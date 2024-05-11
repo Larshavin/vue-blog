@@ -1,7 +1,7 @@
 <template>
     <div class="mx-3">
-        <div>
-            <div class="mt-8">
+        <div class="mb-7">
+            <div class="mt-8 mb-7">
                 <RouterLink to="/" style="text-decoration: none; color: inherit;">
                     Home
                 </RouterLink> »
@@ -9,15 +9,15 @@
                     Posts
                 </RouterLink>
             </div>
-            <h1 v-if="options.title">
+            <div class="font-extrabold text-3xl mb-4" v-if="options.title">
                 {{ options.title }}
-            </h1>
+            </div>
             <div v-if="options.date" class="text-600">
                 {{ timeFormatChange(options.date) }} · {{ timeToRead }} min read
             </div>
         </div>
 
-        <div class="surface-600 text-300 text-lg p-3 mt-3 font-bold border-round flex flex-column align-items-start justify-content-center cursor-pointer"
+        <div class="commonStyle font-lg p-3 mt-3 mb-7 font-bold rounded flex flex-col items-start justify-center cursor-pointer"
             @click="tocClick()">
             <div class="">
                 <i v-if="!tocOpen" class="pi pi-caret-right"></i>
@@ -36,34 +36,33 @@
 
         <div v-if="options.Tags" class="flex gap-3">
             <div v-for="tag in options.Tags" :key="tag"
-                class="flex align-items-center border-round justify-content-center surface-600 text-300 align-items-center px-1"
+                class="flex items-center rounded justify-center commonStyle items-center px-1"
                 style="height: 40px; min-width: 60px;">
                 {{ tag }}
             </div>
         </div>
-        <div class=" flex w-full justify-content-between border-round surface-600 text-300 align-items-center mt-3"
-            style="height: 50px;">
+        <div class=" flex w-full justify-between rounded commonStyle items-center mt-3" style="height: 50px;">
             <div class="p-4 w-full">
-                <div class="justify-content-start flex mb-1">
+                <div class="justify-start flex mb-1">
                     다음 글 :
                 </div>
                 <div v-if="prevPost.title" @click="seePostDetail(prevPost.title)"
-                    class="w-full justify-content-start flex cursor-pointer underline">
+                    class="w-full justify-start flex cursor-pointer underline">
                     {{ prevPost.title }}
                 </div>
-                <div v-else class="w-full justify-content-start flex ">
+                <div v-else class="w-full justify-start flex ">
                     없음
                 </div>
             </div>
             <div class="p-4  w-full">
-                <div class="justify-content-end flex mb-1">
+                <div class="justify-end flex mb-1">
                     이전 글 :
                 </div>
                 <div v-if="nextPost.title" @click="seePostDetail(nextPost.title)"
-                    class="w-full justify-content-end flex cursor-pointer underline">
+                    class="w-full justify-end flex cursor-pointer underline">
                     {{ nextPost.title }}
                 </div>
-                <div v-else class="w-full justify-content-end flex">
+                <div v-else class="w-full justify-end flex">
                     없음
                 </div>
             </div>
@@ -117,9 +116,9 @@ const importData = async () => {
         preElements.forEach((preElement) => {
             // console.log(preElement)
             const button = document.createElement('Button');
-            button.classList.add('button', 'absolute', 'text-white', 'p-1', 'border-round');
+            button.classList.add('button', 'absolute', 'text-white', 'p-1', 'rounded');
             button.style.right = '0.25rem';
-            button.style.top = '0.4rem';
+            button.style.top = '0.2rem';
             button.textContent = 'Copy';
             button.addEventListener('click', () => {
                 const lines = preElement.textContent.trim();
@@ -197,14 +196,14 @@ const renderer = (() => {
         const langClass = 'language-' + language;
 
         const template = `
-        <pre class="flex flex-column">
-            <div class="surface-700 text-white px-2 border-round">${language}</div>
-            <code class="hljs ${langClass} border-round" style="font-size:60%;">${codeContent}</code></pre>`;
+        <pre class="flex flex-col">
+            <div class="bg-slate-700 text-white px-2 py-2 rounded">${language}</div>
+            <code class="hljs ${langClass} rounded text-base mb-3 inline-block">${codeContent}</code></pre>`;
         return template;
     };
     renderer.image = function (href, title, text) {
         const path = 'https://blog.3trolls.me/syyang/image/' + href
-        return `<div class="flex justify-content-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 border-round z-2 border-300" /></div>`; // for local references
+        return `<div class="flex justify-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 rounded z-2 border-300" /></div>`; // for local references
     };
     renderer.heading = function (text, level, raw) {
         // console.log(text, level, raw)
@@ -309,7 +308,7 @@ const tocClick = () => {
 
 :deep(h1:hover .anchor) {
     display: inline-flex;
-    color: var(--surface-700);
+    color: var(--bg-slate-700);
     margin-inline-start: 8px;
     font-weight: 100;
     user-select: none;
@@ -352,4 +351,8 @@ const tocClick = () => {
     height: auto;
     object-fit: cover;
 }
-</style >
+
+.commonStyle {
+    @apply bg-slate-700 text-white;
+}
+</style>

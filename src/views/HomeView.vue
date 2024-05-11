@@ -8,7 +8,7 @@ const introduce = ref("In the realm of astronomy once, \n but now becoming a dre
 </script>
 
 <template>
-  <div class="flex flex-column " style="height: 100%;">
+  <div class="flex flex-col " style="height: 100%;">
     <div class="">
       <Profile :title="title" :introduce="introduce" />
     </div>

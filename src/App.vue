@@ -42,24 +42,25 @@ const handleScroll = () => {
 </script>
 
 <template>
-  <div id="main" class="flex flex-column align-items-center"
-    :class="[toggleDarKMode ? 'surface-900 text-300' : 'bg-blue-50 text-800']"
+  <div id="main" class="flex flex-col items-center"
+    :class="[toggleDarKMode ? 'bg-slate-900 text-slate-300' : 'bg-slate-50 text-slate-800']"
     style="width: 100%; min-height: 100vh; min-width: 360px;">
-    <div id="navbar_div" class="flex flex-column align-items-center w-full" ref="navbarRef">
-      <NavBar class="navbar" :title="title" :toggle="toggleDarKMode" @toggle-change="toggleDarKMode = !toggleDarKMode" />
+    <div id="navbar_div" class="flex flex-col items-center w-full" ref="navbarRef">
+      <NavBar class="navbar" :title="title" :toggle="toggleDarKMode"
+        @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
-    <div id="content_div" class="flex flex-column align-items-center" style="width: 100%;">
+    <div id="content_div" class="flex flex-col items-center" style="width: 100%;">
       <div class="content" :style="{ 'min-height': contentHeight }">
         <RouterView />
       </div>
     </div>
-    <div id="footer_div" class="footer flex align-items-center justify-content-center" style="height: 50px;">
+    <div id="footer_div" class="footer flex items-center justify-center" style="height: 50px;">
       © 2023 &nbsp;
       <a href="_self" :class="[toggleDarKMode ? 'text-300' : 'text-800']">{{ title }}</a>
       &nbsp; Powered by &nbsp;
       <a href="https://github.com/Larshavin/vue-blog" :class="[toggleDarKMode ? 'text-300' : 'text-800']">Larshavin</a>
     </div>
-    <div v-if="showTopButton" class="scroll-btn flex align-items-center justify-content-center" @click="scrollToTop">TOP
+    <div v-if="showTopButton" class="scroll-btn flex items-center justify-center" @click="scrollToTop">TOP
     </div>
   </div>
 </template>
@@ -140,8 +141,8 @@ html {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: var(--surface-700);
-    color: aliceblue;
+    background-color: rgb(51, 65, 85);
+    color: white;
   }
 
   .content {
