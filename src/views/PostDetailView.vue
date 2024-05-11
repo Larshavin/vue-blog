@@ -34,12 +34,8 @@
             </div>
         </div>
 
-        <!-- 구분선 -->
         <div class="w-full h-1 bg-slate-200 mt-7 mb-7"></div>
-
         <div id="markdown" class="line-height-4 text-xl custom" v-html="markdownHtml"></div>
-
-        <!-- 구분선 -->
         <div class="w-full h-1 bg-slate-200 mt-7 mb-7"></div>
 
         <div v-if="options.Tags" class="flex gap-3">
@@ -155,7 +151,8 @@ const importData = async () => {
 // 라우트 매개변수가 변경될 때 실행할 작업
 
 watch(() => route.params.id, async (newId, oldId) => {
-    if (newId !== oldId) {
+    if (newId !== oldId && oldId !== undefined) {
+        // console.log(newId, oldId)
         try {
             await importData();
         } catch (error) {
@@ -251,11 +248,21 @@ const options = reactive({
     date: '',
     Tags: [],
 })
+
+// const viewOptions = ref({
+//     title: '',
+//     date: '',
+//     Tags: [],
+// })
+
 const hooks = {
     preprocess(markdown) {
         const data = fm(markdown);
         // options.value = data.attributes;
         Object.assign(options, data.attributes);
+
+
+        // console.log(options)
         return data.body;
     }
 };
