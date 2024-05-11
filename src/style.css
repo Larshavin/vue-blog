@@ -13,7 +13,7 @@
         @apply font-bold text-lg my-3;
     }
     p {
-        @apply my-2 text-base leading-8 text-black;
+        @apply my-2 text-base leading-8 text-inherit;
     }
     ul {
         display: block;
