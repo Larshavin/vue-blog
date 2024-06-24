@@ -2,6 +2,8 @@
 </script>
 
 <template>
-    Search
-    공사 중 ...
+    <div>
+        Search
+        공사 중 ...
+    </div>
 </template>

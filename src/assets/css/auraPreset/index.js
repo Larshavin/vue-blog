@@ -1,8 +1,8 @@
 import global from './global.js';
+import checkbox from './checkbox';
 import autocomplete from './autocomplete';
 import calendar from './calendar';
 import cascadeselect from './cascadeselect';
-import checkbox from './checkbox';
 import chips from './chips';
 import colorpicker from './colorpicker';
 import dropdown from './dropdown';
@@ -94,10 +94,10 @@ export default {
         badgedirective,
         ripple
     },
+    checkbox,
     autocomplete,
     calendar,
     cascadeselect,
-    checkbox,
     chips,
     colorpicker,
     dropdown,

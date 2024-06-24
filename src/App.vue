@@ -50,8 +50,8 @@ const handleScroll = () => {
         @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
     <div id="content_div" class="flex flex-col items-center" style="width: 100%;">
-      <div class="content" :style="{ 'min-height': contentHeight }">
-        <RouterView />
+      <div class="content flex flex-col" :style="{ 'min-height': contentHeight }">
+        <RouterView class="flex-col grow h-full w-full" />
       </div>
     </div>
     <div id="footer_div" class="footer flex items-center justify-center" style="height: 50px;">

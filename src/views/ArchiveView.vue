@@ -2,6 +2,8 @@
 </script>
 
 <template>
-  Archive
-  공사 중 ...
+  <div>
+    Archive
+    공사 중 ...
+  </div>
 </template>

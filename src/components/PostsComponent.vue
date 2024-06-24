@@ -46,9 +46,11 @@ const first = ref((id.value - 1) * rows.value)
 const postLength = ref(0)
 const getPosts = async () => {
     try {
-        const response = await axios.get('https://blog.3trolls.me/syyang/posts/' + id.value + '/' + rows.value);
+        const response = await axios.get(import.meta.env.VITE_ENDPOINT + 'syyang/posts/' + id.value + '/' + rows.value);
         posts.value = response.data.posts;
         postLength.value = response.data.length;
+
+        console.log(posts.value);
     } catch (error) {
         console.error(error);
     }

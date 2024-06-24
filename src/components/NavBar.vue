@@ -66,6 +66,10 @@ const paths = ref([
         name: 'Tag',
         path: '/tag',
     },
+    {
+        name: 'Admin',
+        path: '/admin',
+    },
 ])
 
 const isActive = (path) => {

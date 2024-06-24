@@ -91,10 +91,10 @@ const router = useRouter()
 
 const markdown = ref('');
 const markdownHtml = ref('');
-const markdownToHtml = (() => {
+const markdownToHtml = ((markdown) => {
     marked.use({ hooks });
     marked.use({ renderer });
-    const output = marked(markdown.value, {
+    const output = marked(markdown, {
         async: true,
         pedantic: false,
         headerIds: false,
@@ -104,17 +104,9 @@ const markdownToHtml = (() => {
     return output
 });
 
-onMounted(async () => {
-    await importData();
-});
-
-const importData = async () => {
-    const server = 'https://blog.3trolls.me/syyang/markdown'
-    const path = "/" + route.params.id + "/" + route.params.id + ".md"
-    await getPageInfo(route.params.id);
-    await getMarkdownFile(server + path);
-    markdownHtml.value = await markdownToHtml();
-    readingTime(markdown.value);
+const convertMarkdown = async (markdown) => {
+    markdownHtml.value = await markdownToHtml(markdown);
+    readingTime(markdown);
     nextTick(() => {
         const preElements = document.querySelectorAll('#markdown pre');
         preElements.forEach((preElement) => {
@@ -146,6 +138,18 @@ const importData = async () => {
             preElement.classList.add('relative');
         })
     });
+}
+
+onMounted(async () => {
+    await importData();
+});
+
+const importData = async () => {
+    const server = import.meta.env.VITE_ENDPOINT + 'syyang/markdown'
+    const path = "/" + route.params.id + "/" + route.params.id + ".md"
+    await getPageInfo(route.params.id);
+    await getMarkdownFile(server + path);
+    await convertMarkdown(markdown.value);
 }
 
 // 라우트 매개변수가 변경될 때 실행할 작업
@@ -184,7 +188,7 @@ const prevPost = ref({ "title": "", "number": "" });
 const nextPost = ref({ "title": "", "number": "" });
 const currentPostID = ref();
 const getPageInfo = async (title) => {
-    const server = 'https://blog.3trolls.me/syyang/post'
+    const server = import.meta.env.VITE_ENDPOINT + 'syyang/post'
     const rows = 5;
     try {
         const response = await axios.get(server + '/' + title + '/' + rows);
@@ -205,6 +209,7 @@ const seePostDetail = async (path) => {
 }
 
 const tocItems = ref([]);
+
 const renderer = (() => {
     const renderer = new marked.Renderer();
     renderer.code = function (code, language) {
@@ -219,7 +224,7 @@ const renderer = (() => {
         return template;
     };
     renderer.image = function (href, title, text) {
-        const path = 'https://blog.3trolls.me/syyang/image/' + href
+        const path = import.meta.env.VITE_ENDPOINT + 'syyang/image/' + href
         return `<div class="flex justify-center"><img src="${path}" alt="${text}" title="${title}" class="img border-1 rounded z-2 border-300" /></div>`; // for local references
     };
     renderer.heading = function (text, level, raw) {
@@ -243,24 +248,18 @@ const renderer = (() => {
     };
     return renderer;
 })();
+
 const options = reactive({
     title: '',
     date: '',
     Tags: [],
 })
 
-// const viewOptions = ref({
-//     title: '',
-//     date: '',
-//     Tags: [],
-// })
-
 const hooks = {
     preprocess(markdown) {
         const data = fm(markdown);
         // options.value = data.attributes;
         Object.assign(options, data.attributes);
-
 
         // console.log(options)
         return data.body;

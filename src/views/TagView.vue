@@ -2,6 +2,8 @@
 </script>
 
 <template>
-    Tag
-    공사 중 ...
+    <div>
+        Tag
+        공사 중 ...
+    </div>
 </template>
