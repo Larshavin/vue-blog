@@ -195,8 +195,6 @@ const getPageInfo = async (title) => {
         prevPost.value = response.data.prev;
         nextPost.value = response.data.next;
         currentPostID.value = response.data.number + 1;
-
-        // console.log(prevPost.value, nextPost.value, currentPostID.value)
     } catch (error) {
         console.error(error);
     }
