@@ -2,7 +2,6 @@
     <div>
         <div class="flex justify-center items-center h-full py-9">
             <div class="flex flex-col w-[90%] h-[90%]">
-                <!-- 요만큼 -->
                 <div class="flex flex-col mb-6">
                     <div class="text-3xl font-bold mb-6">Yang's Blog</div>
                     <span class="text-[#545454] text-base"> 관리자 용 입니다 </span>

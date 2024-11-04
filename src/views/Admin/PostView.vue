@@ -1,7 +1,7 @@
 <script setup>
 
 //  https://yy-z-a.tistory.com/14
-import { onMounted, ref, onUnmounted, onBeforeUnmount } from 'vue';
+import { onMounted, ref, onUnmounted, onBeforeUnmount, inject } from 'vue';
 
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -9,6 +9,8 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
+
+const $axios = inject('$axios');
 
 const props = defineProps({
     modelValue: {
@@ -163,7 +165,15 @@ const savePost = async () => {
         category: category.value,
         tempPath: tmpID.value,
     };
-    console.log(data, tags.value);
+
+    try {
+        const response = await $axios.post('/syyang/post', data);
+        console.log(response);
+        router.push({ name: 'admin' });
+
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const handleBeforeUnload = async (event) => {
