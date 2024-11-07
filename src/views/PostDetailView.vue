@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-3">
+    <div class="px-8">
         <div class="mb-7">
             <div class="mt-8 mb-7">
                 <RouterLink to="/" style="text-decoration: none; color: inherit;">

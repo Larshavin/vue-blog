@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import NavBar from './components/NavBar.vue';
+import LeftSideBar from './components/LeftSideBar.vue';
+import RightSideBar from './components/RightSideBar.vue';
 
 import { storeToRefs } from 'pinia'
 import { useToggleStore } from '@/stores/toggle'
@@ -49,16 +51,27 @@ const handleScroll = () => {
       <NavBar class="navbar" :title="title" :toggle="toggleDarKMode"
         @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
-    <div id="content_div" class="flex flex-col items-center" style="width: 100%;">
-      <div class="content flex flex-col" :style="{ 'min-height': contentHeight }">
+    <div id="content_div" class="flex flex-row justify-between items-center border-y-2" style="width: 100%;"
+      :style="{ 'height': contentHeight }">
+      <!-- left side bar -->
+      <div class="flex basis-1/6" style="height: 100%;">
+        <LeftSideBar class="w-full h-full" />
+      </div>
+      <!-- center main page -->
+      <div class="content flex flex-col basis-2/3 overflow-auto" style="height: 100%;">
         <RouterView class="flex-col grow h-full w-full" />
+      </div>
+      <!-- right side bar -->
+      <div class="flex basis-1/6 h-full" style="height: 100%;">
+        <RightSideBar />
       </div>
     </div>
     <div id="footer_div" class="footer flex items-center justify-center" style="height: 50px;">
       © 2023 &nbsp;
       <a href="_self" :class="[toggleDarKMode ? 'text-300' : 'text-800']">{{ title }}</a>
       &nbsp; Powered by &nbsp;
-      <a href="https://github.com/Larshavin/vue-blog" :class="[toggleDarKMode ? 'text-300' : 'text-800']">Larshavin</a>
+      <a href="https://github.com/Larshavin/vue-blog" :class="[toggleDarKMode ? 'text-300' : 'text-800']">Yang
+        Seong-Yeon</a>
     </div>
     <div v-if="showTopButton" class="scroll-btn flex items-center justify-center" @click="scrollToTop">TOP
     </div>

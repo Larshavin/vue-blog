@@ -45,6 +45,6 @@ const introduce = computed(() => {
 .profile {
     /* width: 100%;
     height: 100%; */
-    margin: 8rem 2rem 1rem 2rem;
+    margin: 2rem 2rem 1rem 2rem;
 }
 </style>
