@@ -51,18 +51,17 @@ const handleScroll = () => {
       <NavBar class="navbar" :title="title" :toggle="toggleDarKMode"
         @toggle-change="toggleDarKMode = !toggleDarKMode" />
     </div>
-    <div id="content_div" class="flex flex-row justify-between items-center border-y-2" style="width: 100%;"
-      :style="{ 'height': contentHeight }">
+    <div id="content_div" class=" border-y-2 flex-layout" style="width: 100%;" :style="{ 'height': contentHeight }">
       <!-- left side bar -->
-      <div class="flex basis-1/6" style="height: 100%;">
+      <div class="flex basis-1/6 sidebar-layout" style="height: 100%;">
         <LeftSideBar class="w-full h-full" />
       </div>
       <!-- center main page -->
-      <div class="content flex flex-col basis-2/3 overflow-auto" style="height: 100%;">
+      <div class="content flex flex-col basis-2/3 grow overflow-auto" style="height: 100%;">
         <RouterView class="flex-col grow h-full w-full" />
       </div>
       <!-- right side bar -->
-      <div class="flex basis-1/6 h-full" style="height: 100%;">
+      <div class="flex basis-1/6 h-full sidebar-layout" style="height: 100%;">
         <RightSideBar />
       </div>
     </div>
@@ -107,6 +106,22 @@ html {
   .footer {
     width: 100%;
   }
+
+  .flex-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flex-col-layout {
+    display: flex;
+    flex-direction: column !important;
+  }
+
+  .sidebar-layout {
+    display: none !important;
+  }
 }
 
 @media (min-width:800px) and (max-width:1072px) {
@@ -138,6 +153,13 @@ html {
   .footer {
     width: 800px;
   }
+
+  .flex-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 @media (min-width:1072px) {
@@ -168,6 +190,13 @@ html {
 
   .footer {
     width: 800px;
+  }
+
+  .flex-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 

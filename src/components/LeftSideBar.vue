@@ -3,10 +3,10 @@
     <div class="flex flex-column items-center justify-left h-full">
         <div class="my-8 flex flex-col h-full w-[90%] bg-white shadow-l border-r-2 p-8">
             <div class="flex flex-col items-left justify-center mb-4">
-                <div class="text-2xl ">카테고리</div>
+                <div class="text-xl ">카테고리</div>
             </div>
             <div v-for="val, _ in categoryList" class="flex flex-col items-left justify-center my-3 pl-4">
-                <div class="text-xl hover:text-blue-700" @click="selectCategory(val)">
+                <div class="text-l hover:text-blue-700" @click="selectCategory(val)">
                     <div v-if="val.id == selectedCategory" class="font-black">
                         {{ val.name }}
                     </div>

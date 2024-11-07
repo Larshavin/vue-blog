@@ -95,7 +95,7 @@ const changePage = (event) => {
 <template>
     <div v-if="isDataEmpty != true">
         <div v-for="post in posts" :key="post.content"
-            class="rounded-lg mx-8 my-7 px-8 py-5 shadow-xl flex flex-row justify-between cursor-pointer hover:bg-blue-100"
+            class="rounded-lg mx-8 my-7 px-8 py-5 shadow-xl flex flex-row justify-between flex-col-layout cursor-pointer hover:bg-blue-100"
             :class="darkMode" style="height: 90px;" @click="seePostDetail(post.path)">
             <div class="align-middle font-bold text-title overflow-hidden white-space-nowrap text-overflow-ellipsis flex items-center"
                 style="height: 100%;">
